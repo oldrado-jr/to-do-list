@@ -1,7 +1,18 @@
+// Components
+import Footer from './components/Footer';
+import Header from './components/Header';
+
+// CSS
+import styles from './App.module.css';
+
 function App() {
   return (
     <>
-      <h1>Todo React</h1>
+      <Header />
+      <main className={styles.main}>
+        <h1>Conteúdo...</h1>
+      </main>
+      <Footer />
     </>
   );
 }
