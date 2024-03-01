@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
+import Modal from './components/Modal';
 
 // Types
 import Task from './types/Task';
@@ -14,6 +15,12 @@ import styles from './App.module.css';
 
 function App() {
   const [taskList, setTaskList] = useState<Task[]>([]);
+  const [taskToUpdate, setTaskToUpdate] = useState<Task | null>(null);
+
+  const toggleModal = () => {
+    const modal = document.querySelector('#modal');
+    modal?.classList.toggle('hide');
+  };
 
   const deleteTask = (id: number) => {
     setTaskList(
@@ -23,8 +30,33 @@ function App() {
     );
   };
 
+  const editTask = (task: Task) => {
+    toggleModal();
+    setTaskToUpdate(task);
+  };
+
+  const updateTask = (taskData: Task) => {
+    const updatedTasks = taskList.map((task) => {
+      return task.id === taskData.id ? taskData : task;
+    });
+
+    setTaskList(updatedTasks);
+
+    toggleModal();
+  };
+
   return (
     <>
+      <Modal
+        children={
+          <TaskForm
+            btnText="Editar tarefa"
+            taskList={taskList}
+            task={taskToUpdate}
+            handleUpdate={updateTask}
+          />
+        }
+      />
       <Header />
       <main className={styles.main}>
         <div>
@@ -40,6 +72,7 @@ function App() {
           <TaskList
             taskList={taskList}
             handleDelete={deleteTask}
+            handleEdit={editTask}
           />
         </div>
       </main>

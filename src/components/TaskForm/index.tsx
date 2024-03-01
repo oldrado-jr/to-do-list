@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react';
 
 // Types
 import Task from '../../types/Task';
@@ -10,27 +10,52 @@ type Props = {
   btnText: string;
   taskList: Task[];
   setTaskList?: Dispatch<SetStateAction<Task[]>>;
+  task?: Task | null;
+  handleUpdate?(taskData: Task): void;
 };
 
-const TaskForm = ({ btnText, taskList, setTaskList }: Props) => {
+const TaskForm = ({ btnText, taskList, setTaskList, task, handleUpdate }: Props) => {
+  const [id, setId] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
   const [difficulty, setDifficulty] = useState<number>(0);
+
+  useEffect(() => {
+    if (!task) {
+      return;
+    }
+
+    const { id, title, difficulty } = task;
+
+    setId(id);
+    setTitle(title);
+    setDifficulty(difficulty);
+  }, [task]);
 
   const addTaskHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const id = Math.floor(Math.random() * 1000);
+    if (handleUpdate) {
+      const taskData: Task = {
+        id,
+        title,
+        difficulty
+      };
 
-    const newTask: Task = {
-      id,
-      title,
-      difficulty,
-    };
+      handleUpdate(taskData);
+    } else {
+      const id = Math.floor(Math.random() * 1000);
 
-    setTaskList!([...taskList, newTask]);
+      const newTask: Task = {
+        id,
+        title,
+        difficulty,
+      };
 
-    setTitle('');
-    setDifficulty(0);
+      setTaskList!([...taskList, newTask]);
+
+      setTitle('');
+      setDifficulty(0);
+    }
   };
 
   return (
@@ -40,6 +65,7 @@ const TaskForm = ({ btnText, taskList, setTaskList }: Props) => {
         <input
           type="text"
           placeholder="Título da tarefa"
+          required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -49,6 +75,8 @@ const TaskForm = ({ btnText, taskList, setTaskList }: Props) => {
         <input
           type="number"
           placeholder="Dificuldade da tarefa"
+          required
+          min={0}
           value={difficulty}
           onChange={(e) => setDifficulty(parseInt(e.target.value))}
         />

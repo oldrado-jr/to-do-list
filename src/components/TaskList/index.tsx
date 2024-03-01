@@ -9,21 +9,22 @@ import styles from './styles.module.css';
 type Props = {
   taskList: Task[];
   handleDelete(id: number): void;
+  handleEdit(task: Task): void;
 };
 
-const TaskList = ({ taskList, handleDelete }: Props) => {
+const TaskList = ({ taskList, handleDelete, handleEdit }: Props) => {
   return (
     <>
       {taskList.length > 0 ? (
-        taskList.map(({ id, title, difficulty }) => (
-          <div key={id} className={styles.task}>
+        taskList.map((task) => (
+          <div key={task.id} className={styles.task}>
             <div className={styles.details}>
-              <h4>{title}</h4>
-              <p>Dificuldade: {difficulty}</p>
+              <h4>{task.title}</h4>
+              <p>Dificuldade: {task.difficulty}</p>
             </div>
             <div className={styles.actions}>
-              <BiPencil />
-              <BiTrash onClick={() => handleDelete(id)} />
+              <BiPencil onClick={() => handleEdit(task)} />
+              <BiTrash onClick={() => handleDelete(task.id)} />
             </div>
           </div>
         ))
