@@ -6,9 +6,10 @@ import styles from './styles.module.css';
 
 type Props = {
   children: ReactNode;
+  title: string;
 };
 
-const Modal = ({ children }: Props) => {
+const Modal = ({ children, title }: Props) => {
   const closeModal = () => {
     const modal = document.querySelector('#modal');
     modal?.classList.add('hide');
@@ -19,7 +20,7 @@ const Modal = ({ children }: Props) => {
       <div className={styles.fade} onClick={closeModal}></div>
       <div className={styles.modal}>
         <BiSolidXCircle onClick={closeModal} />
-        <h2>Texto modal</h2>
+        <h2>{title}</h2>
         {children}
       </div>
     </div>

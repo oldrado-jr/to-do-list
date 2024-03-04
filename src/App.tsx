@@ -48,6 +48,7 @@ function App() {
   return (
     <>
       <Modal
+        title="Editar tarefa"
         children={
           <TaskForm
             btnText="Editar tarefa"
